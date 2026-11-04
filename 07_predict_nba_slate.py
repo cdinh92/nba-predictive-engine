@@ -3,10 +3,14 @@ from zoneinfo import ZoneInfo
 import json
 import os
 import re
+import requests
 import pandas as pd
 import joblib
 from scipy.stats import norm
+from dotenv import load_dotenv
 from nba_api.stats.endpoints import scoreboardv2
+
+load_dotenv()
 
 NBA_TEAM_NAMES = {
     'ATL': 'Hawks', 'BOS': 'Celtics', 'BKN': 'Nets', 'CHA': 'Hornets',
@@ -30,38 +34,92 @@ TEAM_ID_TO_ABBR = {
     1610612762: 'UTA', 1610612764: 'WAS'
 }
 
+# Comprehensive mapping from The Odds API full team names to 3-letter abbreviations
+FULL_NAME_TO_ABBR = {
+    'Atlanta Hawks': 'ATL', 'Boston Celtics': 'BOS', 'Brooklyn Nets': 'BKN', 'Charlotte Hornets': 'CHA',
+    'Chicago Bulls': 'CHI', 'Cleveland Cavaliers': 'CLE', 'Dallas Mavericks': 'DAL', 'Denver Nuggets': 'DEN',
+    'Detroit Pistons': 'DET', 'Golden State Warriors': 'GSW', 'Houston Rockets': 'HOU', 'Indiana Pacers': 'IND',
+    'Los Angeles Clippers': 'LAC', 'LA Clippers': 'LAC', 'Los Angeles Lakers': 'LAL', 'Memphis Grizzlies': 'MEM',
+    'Miami Heat': 'MIA', 'Milwaukee Bucks': 'MIL', 'Minnesota Timberwolves': 'MIN', 'New Orleans Pelicans': 'NOP',
+    'New York Knicks': 'NYK', 'Oklahoma City Thunder': 'OKC', 'Orlando Magic': 'ORL', 'Philadelphia 76ers': 'PHI',
+    'Phoenix Suns': 'PHX', 'Portland Trail Blazers': 'POR', 'Sacramento Kings': 'SAC', 'San Antonio Spurs': 'SAS',
+    'Toronto Raptors': 'Raptors', 'Utah Jazz': 'UTA', 'Washington Wizards': 'WAS',
+    'Toronto Raptors': 'TOR'
+}
+
 def get_full_name(abbr):
     return NBA_TEAM_NAMES.get(abbr, abbr)
 
+def fetch_live_odds_mapping():
+    """Queries The Odds API using the correct basketball_nba sport key."""
+    api_key = os.getenv("ODDS_API_KEY")
+    if not api_key:
+        print("⚠️ Warning: ODDS_API_KEY not found in environment. Defaulting moneylines to -110.")
+        return {}
+
+    url = f"https://api.the-odds-api.com/v4/sports/basketball_nba/odds/?apiKey={api_key}&regions=us&markets=h2h&oddsFormat=american"
+    try:
+        response = requests.get(url, timeout=10)
+        print(f"📡 Odds API Status Code: {response.status_code}")
+        if response.status_code != 200:
+            print(f"⚠️ Error response: {response.text}")
+            return {}
+
+        data = response.json()
+        odds_map = {}
+        for game in data:
+            home_full = game.get('home_team')
+            away_full = game.get('away_team')
+            home_abbr = FULL_NAME_TO_ABBR.get(home_full)
+            away_abbr = FULL_NAME_TO_ABBR.get(away_full)
+
+            if not home_abbr or not away_abbr:
+                print(f"⚠️ Unrecognized team names from Odds API: {away_full} @ {home_full}")
+                continue
+
+            bookmakers = game.get('bookmakers', [])
+            selected_book = None
+            for bm in bookmakers:
+                if bm['key'] in ['draftkings', 'fanduel', 'betmgm']:
+                    selected_book = bm
+                    break
+            if not selected_book and bookmakers:
+                selected_book = bookmakers[0]
+
+            if selected_book:
+                for market in selected_book.get('markets', []):
+                    if market['key'] == 'h2h':
+                        h_price, a_price = -110, -110
+                        for outcome in market.get('outcomes', []):
+                            team_mapped = FULL_NAME_TO_ABBR.get(outcome['name'])
+                            if team_mapped == home_abbr:
+                                h_price = outcome['price']
+                            elif team_mapped == away_abbr:
+                                a_price = outcome['price']
+                        odds_map[(away_abbr, home_abbr)] = (h_price, a_price)
+        print(f"✅ Successfully mapped live odds for {len(odds_map)} games.")
+        return odds_map
+    except Exception as e:
+        print(f"⚠️ Error connecting to Odds API: {e}")
+        return {}
+
 def format_gametime_utc(gameday_val, gametime_str):
-    """
-    Parses NBA API Eastern Time tipoff strings (e.g., '7:30 pm ET') and converts
-    them into standardized ISO-8601 UTC format ('YYYY-MM-DDTHH:MM:SSZ').
-    """
     if not gametime_str or gametime_str == 'TBD' or pd.isna(gametime_str) or pd.isna(gameday_val):
         return 'TBD'
     try:
         date_str = pd.to_datetime(gameday_val).strftime('%Y-%m-%d')
         raw_str = str(gametime_str).strip()
-
-        # Match standard NBA API tipoff string like '7:30 pm ET' or '10:00 pm ET'
         et_match = re.search(r'(\d{1,2}:\d{2})\s*(am|pm)', raw_str, re.IGNORECASE)
         if et_match:
             time_part = f"{et_match.group(1)} {et_match.group(2).upper()}"
             et_zone = ZoneInfo("America/New_York")
             local_dt = datetime.strptime(f"{date_str} {time_part}", "%Y-%m-%d %I:%M %p").replace(tzinfo=et_zone)
+            return local_dt.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SSZ')
 
-            # Convert to Mountain Time (uncomment if needed directly in JSON)
-            # mt_zone = ZoneInfo("America/Denver")
-            # return local_dt.astimezone(mt_zone).strftime('%I:%M %p')
-
-            return local_dt.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-
-        # Fallback for 24-hour 'HH:MM' format
         time_str = raw_str[:5]
         et_zone = ZoneInfo("America/New_York")
         local_dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M").replace(tzinfo=et_zone)
-        return local_dt.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+        return local_dt.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SSZ')
     except Exception:
         return str(gametime_str)
 
@@ -102,7 +160,6 @@ def get_team_latest_stats(df, team, target_date_str):
     }
 
 def fetch_daily_slate(target_date):
-    """Pulls the NBA daily schedule via ScoreboardV2 for YYYY-MM-DD."""
     sb = scoreboardv2.ScoreboardV2(game_date=target_date)
     header_df = sb.game_header.get_data_frame()
     if header_df.empty:
@@ -117,9 +174,7 @@ def fetch_daily_slate(target_date):
             'gameday': target_date,
             'gametime': str(row.get('GAME_STATUS_TEXT', 'TBD')).strip(),
             'home_team': home_abbr,
-            'away_team': away_abbr,
-            'home_moneyline': -110,
-            'away_moneyline': -110
+            'away_team': away_abbr
         })
     return pd.DataFrame(games)
 
@@ -130,7 +185,7 @@ if __name__ == '__main__':
     MODEL_DIR = os.path.join(PROJECT_ROOT, 'models')
 
     TARGET_SEASON = '2026-27'
-    TARGET_DATE = '2026-11-04'  # Set target date for NBA slate
+    TARGET_DATE = '2026-11-04'
 
     PREDICTIONS_BASE = os.path.join(PROJECT_ROOT, 'predictions')
     DATE_FOLDER_NAME = f'date_{TARGET_DATE}'
@@ -144,6 +199,9 @@ if __name__ == '__main__':
     print('=========================================================================================================')
     print(f' NBA PREDICTIVE ENGINE | RUN TIMESTAMP: {formatted_timestamp}')
     print('=========================================================================================================')
+
+    print(f'Pulling live sportsbook odds for basketball_nba...')
+    live_odds = fetch_live_odds_mapping()
 
     print(f'Pulling NBA Schedule for {TARGET_DATE}...')
     target_games = fetch_daily_slate(TARGET_DATE)
@@ -165,7 +223,7 @@ if __name__ == '__main__':
     total_points_model = joblib.load(total_model_path)
 
     batch_payload = {
-        'last_updated': current_time_utc.strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'last_updated': current_time_utc.strftime('%Y-%m-%dT%H:%M:%SSZ'),
         'season': TARGET_SEASON,
         'target_date': TARGET_DATE,
         'games_by_date': {},
@@ -178,11 +236,15 @@ if __name__ == '__main__':
         away_team_abbr = game['away_team']
         game_id = game['game_id']
 
+        matchup_key = (away_team_abbr, home_team_abbr)
+        if matchup_key in live_odds:
+            home_ml, away_ml = live_odds[matchup_key]
+        else:
+            home_ml, away_ml = -110, -110
+
         gameday = pd.to_datetime(game['gameday']).strftime('%Y-%m-%d') if pd.notna(game.get('gameday')) else 'TBD'
         formatted_time = format_gametime_utc(gameday, game.get('gametime', 'TBD'))
 
-        home_ml = game.get('home_moneyline', -110)
-        away_ml = game.get('away_moneyline', -110)
         home_raw = american_odds_to_raw_prob(home_ml)
         away_raw = american_odds_to_raw_prob(away_ml)
         vegas_implied_prob = home_raw / (home_raw + away_raw) if (home_raw + away_raw) > 0 else 0.50
@@ -195,7 +257,6 @@ if __name__ == '__main__':
 
         rest_diff = home_stats['rest_days'] - away_stats['rest_days']
 
-        # 1. 11-Feature Matrix for NBA Margin Model
         margin_matchup_data = pd.DataFrame([{
             'diff_pts_scored': home_stats['roll_pts_scored'] - away_stats['roll_pts_scored'],
             'diff_pts_allowed': away_stats['roll_pts_allowed'] - home_stats['roll_pts_allowed'],
@@ -210,7 +271,6 @@ if __name__ == '__main__':
             'rest_diff': rest_diff
         }])
 
-        # 2. 20-Feature Matrix for NBA Total Points Model
         total_matchup_data = pd.DataFrame([{
             'sum_pts_scored': home_stats['roll_pts_scored'] + away_stats['roll_pts_scored'],
             'sum_pts_allowed': home_stats['roll_pts_allowed'] + away_stats['roll_pts_allowed'],
@@ -235,7 +295,7 @@ if __name__ == '__main__':
         }])
 
         predicted_margin = float(margin_model.predict(margin_matchup_data)[0])
-        STD_DEV = 12.0  # Standard NBA game margin volatility
+        STD_DEV = 12.0
         stats_home_win_prob = float(norm.cdf(predicted_margin / STD_DEV))
         model_home_win_prob = (0.80 * stats_home_win_prob) + (0.20 * vegas_implied_prob)
 
@@ -303,3 +363,4 @@ if __name__ == '__main__':
         json.dump(batch_payload, f, indent=2, default=int)
 
     print(f'✅ Exported NBA daily JSON slate (ISO-8601 UTC) to {os.path.abspath(json_path)}')
+    print(f'📊 Next: Run python src/render_nba_prediction_table.py to generate {os.path.join(PREDICTIONS_DIR, f"nba_predictions_{TARGET_DATE}.png")}')

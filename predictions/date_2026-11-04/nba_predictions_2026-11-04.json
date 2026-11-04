@@ -1,26 +1,26 @@
 {
-  "last_updated": "2026-11-04T06:57:59Z",
+  "last_updated": "2026-11-04T07:29:51SZ",
   "season": "2026-27",
   "target_date": "2026-11-04",
   "games_by_date": {
     "2026-11-04": [
       {
         "game_id": "0022600173",
-        "gametime": "2026-11-05T00:00:00Z",
+        "gametime": "2026-11-05T00:00:00SZ",
         "home_team": {
           "abbr": "DET",
           "name": "Pistons",
-          "moneyline": -110
+          "moneyline": -124
         },
         "away_team": {
           "abbr": "PHI",
           "name": "76ers",
-          "moneyline": -110
+          "moneyline": 106
         },
         "prediction": {
-          "model_home_win_prob": 0.639,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.139,
+          "model_home_win_prob": 0.646,
+          "vegas_home_implied_prob": 0.533,
+          "edge": 0.113,
           "pick_abbr": "DET",
           "pick_name": "Pistons",
           "projected_margin": 5.4,
@@ -30,21 +30,21 @@
       },
       {
         "game_id": "0022600174",
-        "gametime": "2026-11-05T00:00:00Z",
+        "gametime": "2026-11-05T00:00:00SZ",
         "home_team": {
           "abbr": "WAS",
           "name": "Wizards",
-          "moneyline": -110
+          "moneyline": 124
         },
         "away_team": {
           "abbr": "ATL",
           "name": "Hawks",
-          "moneyline": -110
+          "moneyline": -146
         },
         "prediction": {
-          "model_home_win_prob": 0.557,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.057,
+          "model_home_win_prob": 0.543,
+          "vegas_home_implied_prob": 0.429,
+          "edge": 0.114,
           "pick_abbr": "WAS",
           "pick_name": "Wizards",
           "projected_margin": 2.2,
@@ -54,21 +54,21 @@
       },
       {
         "game_id": "0022600175",
-        "gametime": "2026-11-05T00:30:00Z",
+        "gametime": "2026-11-05T00:30:00SZ",
         "home_team": {
           "abbr": "BOS",
           "name": "Celtics",
-          "moneyline": -110
+          "moneyline": -567
         },
         "away_team": {
           "abbr": "MIL",
           "name": "Bucks",
-          "moneyline": -110
+          "moneyline": 424
         },
         "prediction": {
-          "model_home_win_prob": 0.764,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.264,
+          "model_home_win_prob": 0.828,
+          "vegas_home_implied_prob": 0.817,
+          "edge": 0.011,
           "pick_abbr": "BOS",
           "pick_name": "Celtics",
           "projected_margin": 11.5,
@@ -78,23 +78,23 @@
       },
       {
         "game_id": "0022600176",
-        "gametime": "2026-11-05T00:30:00Z",
+        "gametime": "2026-11-05T00:30:00SZ",
         "home_team": {
           "abbr": "BKN",
           "name": "Nets",
-          "moneyline": -110
+          "moneyline": 134
         },
         "away_team": {
           "abbr": "CHA",
           "name": "Hornets",
-          "moneyline": -110
+          "moneyline": -158
         },
         "prediction": {
-          "model_home_win_prob": 0.51,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.01,
-          "pick_abbr": "BKN",
-          "pick_name": "Nets",
+          "model_home_win_prob": 0.492,
+          "vegas_home_implied_prob": 0.411,
+          "edge": 0.081,
+          "pick_abbr": "CHA",
+          "pick_name": "Hornets",
           "projected_margin": 0.4,
           "projected_total_points": 217.2,
           "confidence_tier": "Low"
@@ -102,21 +102,21 @@
       },
       {
         "game_id": "0022600177",
-        "gametime": "2026-11-05T00:30:00Z",
+        "gametime": "2026-11-05T00:30:00SZ",
         "home_team": {
           "abbr": "NYK",
           "name": "Knicks",
-          "moneyline": -110
+          "moneyline": -597
         },
         "away_team": {
           "abbr": "CHI",
           "name": "Bulls",
-          "moneyline": -110
+          "moneyline": 443
         },
         "prediction": {
-          "model_home_win_prob": 0.757,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.257,
+          "model_home_win_prob": 0.822,
+          "vegas_home_implied_prob": 0.823,
+          "edge": -0.001,
           "pick_abbr": "NYK",
           "pick_name": "Knicks",
           "projected_margin": 11.1,
@@ -126,69 +126,69 @@
       },
       {
         "game_id": "0022600178",
-        "gametime": "2026-11-05T01:00:00Z",
+        "gametime": "2026-11-05T01:00:00SZ",
         "home_team": {
           "abbr": "MEM",
           "name": "Grizzlies",
-          "moneyline": -110
+          "moneyline": -260
         },
         "away_team": {
           "abbr": "IND",
           "name": "Pacers",
-          "moneyline": -110
+          "moneyline": 215
         },
         "prediction": {
-          "model_home_win_prob": 0.589,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.089,
+          "model_home_win_prob": 0.628,
+          "vegas_home_implied_prob": 0.695,
+          "edge": -0.067,
           "pick_abbr": "MEM",
           "pick_name": "Grizzlies",
           "projected_margin": 3.4,
           "projected_total_points": 229.5,
-          "confidence_tier": "Low"
-        }
-      },
-      {
-        "game_id": "0022600179",
-        "gametime": "2026-11-05T01:00:00Z",
-        "home_team": {
-          "abbr": "NOP",
-          "name": "Pelicans",
-          "moneyline": -110
-        },
-        "away_team": {
-          "abbr": "UTA",
-          "name": "Jazz",
-          "moneyline": -110
-        },
-        "prediction": {
-          "model_home_win_prob": 0.681,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.181,
-          "pick_abbr": "NOP",
-          "pick_name": "Pelicans",
-          "projected_margin": 7.2,
-          "projected_total_points": 234.5,
           "confidence_tier": "Moderate"
         }
       },
       {
+        "game_id": "0022600179",
+        "gametime": "2026-11-05T01:00:00SZ",
+        "home_team": {
+          "abbr": "NOP",
+          "name": "Pelicans",
+          "moneyline": -205
+        },
+        "away_team": {
+          "abbr": "UTA",
+          "name": "Jazz",
+          "moneyline": 172
+        },
+        "prediction": {
+          "model_home_win_prob": 0.711,
+          "vegas_home_implied_prob": 0.646,
+          "edge": 0.064,
+          "pick_abbr": "NOP",
+          "pick_name": "Pelicans",
+          "projected_margin": 7.2,
+          "projected_total_points": 234.5,
+          "confidence_tier": "High"
+        }
+      },
+      {
         "game_id": "0022600180",
-        "gametime": "2026-11-05T01:00:00Z",
+        "gametime": "2026-11-05T01:00:00SZ",
         "home_team": {
           "abbr": "OKC",
           "name": "Thunder",
-          "moneyline": -110
+          "moneyline": -134
         },
         "away_team": {
           "abbr": "CLE",
           "name": "Cavaliers",
-          "moneyline": -110
+          "moneyline": 114
         },
         "prediction": {
-          "model_home_win_prob": 0.522,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.022,
+          "model_home_win_prob": 0.533,
+          "vegas_home_implied_prob": 0.551,
+          "edge": -0.018,
           "pick_abbr": "OKC",
           "pick_name": "Thunder",
           "projected_margin": 0.8,
@@ -198,21 +198,21 @@
       },
       {
         "game_id": "0022600181",
-        "gametime": "2026-11-05T01:30:00Z",
+        "gametime": "2026-11-05T01:30:00SZ",
         "home_team": {
           "abbr": "HOU",
           "name": "Rockets",
-          "moneyline": -110
+          "moneyline": -270
         },
         "away_team": {
           "abbr": "MIN",
           "name": "Timberwolves",
-          "moneyline": -110
+          "moneyline": 220
         },
         "prediction": {
-          "model_home_win_prob": 0.634,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.134,
+          "model_home_win_prob": 0.674,
+          "vegas_home_implied_prob": 0.7,
+          "edge": -0.026,
           "pick_abbr": "HOU",
           "pick_name": "Rockets",
           "projected_margin": 5.2,
@@ -222,45 +222,45 @@
       },
       {
         "game_id": "0022600182",
-        "gametime": "2026-11-05T02:00:00Z",
+        "gametime": "2026-11-05T02:00:00SZ",
         "home_team": {
           "abbr": "DEN",
           "name": "Nuggets",
-          "moneyline": -110
+          "moneyline": -200
         },
         "away_team": {
           "abbr": "TOR",
           "name": "Raptors",
-          "moneyline": -110
+          "moneyline": 165
         },
         "prediction": {
-          "model_home_win_prob": 0.598,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.098,
+          "model_home_win_prob": 0.626,
+          "vegas_home_implied_prob": 0.639,
+          "edge": -0.013,
           "pick_abbr": "DEN",
           "pick_name": "Nuggets",
           "projected_margin": 3.8,
           "projected_total_points": 228.6,
-          "confidence_tier": "Low"
+          "confidence_tier": "Moderate"
         }
       },
       {
         "game_id": "0022600183",
-        "gametime": "2026-11-05T02:00:00Z",
+        "gametime": "2026-11-05T02:00:00SZ",
         "home_team": {
           "abbr": "PHX",
           "name": "Suns",
-          "moneyline": -110
+          "moneyline": 125
         },
         "away_team": {
           "abbr": "POR",
           "name": "Trail Blazers",
-          "moneyline": -110
+          "moneyline": -155
         },
         "prediction": {
-          "model_home_win_prob": 0.53,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.03,
+          "model_home_win_prob": 0.515,
+          "vegas_home_implied_prob": 0.422,
+          "edge": 0.092,
           "pick_abbr": "PHX",
           "pick_name": "Suns",
           "projected_margin": 1.1,
@@ -270,21 +270,21 @@
       },
       {
         "game_id": "0022600184",
-        "gametime": "2026-11-05T02:30:00Z",
+        "gametime": "2026-11-05T02:30:00SZ",
         "home_team": {
           "abbr": "SAS",
           "name": "Spurs",
-          "moneyline": -110
+          "moneyline": -500
         },
         "away_team": {
           "abbr": "DAL",
           "name": "Mavericks",
-          "moneyline": -110
+          "moneyline": 385
         },
         "prediction": {
-          "model_home_win_prob": 0.621,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.121,
+          "model_home_win_prob": 0.682,
+          "vegas_home_implied_prob": 0.802,
+          "edge": -0.12,
           "pick_abbr": "SAS",
           "pick_name": "Spurs",
           "projected_margin": 4.7,
@@ -294,47 +294,47 @@
       },
       {
         "game_id": "0022600185",
-        "gametime": "2026-11-05T03:00:00Z",
+        "gametime": "2026-11-05T03:00:00SZ",
         "home_team": {
           "abbr": "SAC",
           "name": "Kings",
-          "moneyline": -110
+          "moneyline": 429
         },
         "away_team": {
           "abbr": "LAL",
           "name": "Lakers",
-          "moneyline": -110
+          "moneyline": -574
         },
         "prediction": {
-          "model_home_win_prob": 0.347,
-          "vegas_home_implied_prob": 0.5,
-          "edge": -0.153,
+          "model_home_win_prob": 0.284,
+          "vegas_home_implied_prob": 0.182,
+          "edge": 0.102,
           "pick_abbr": "LAL",
           "pick_name": "Lakers",
           "projected_margin": 6.0,
           "projected_total_points": 233.1,
-          "confidence_tier": "Low"
+          "confidence_tier": "High"
         }
       },
       {
         "game_id": "0022600186",
-        "gametime": "2026-11-05T03:30:00Z",
+        "gametime": "2026-11-05T03:30:00SZ",
         "home_team": {
           "abbr": "LAC",
           "name": "Clippers",
-          "moneyline": -110
+          "moneyline": 166
         },
         "away_team": {
           "abbr": "MIA",
           "name": "Heat",
-          "moneyline": -110
+          "moneyline": -198
         },
         "prediction": {
-          "model_home_win_prob": 0.526,
-          "vegas_home_implied_prob": 0.5,
-          "edge": 0.026,
-          "pick_abbr": "LAC",
-          "pick_name": "Clippers",
+          "model_home_win_prob": 0.499,
+          "vegas_home_implied_prob": 0.361,
+          "edge": 0.137,
+          "pick_abbr": "MIA",
+          "pick_name": "Heat",
           "projected_margin": 1.0,
           "projected_total_points": 232.7,
           "confidence_tier": "Low"

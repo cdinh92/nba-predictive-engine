@@ -42,10 +42,6 @@ et_tz = ZoneInfo("America/New_York")
 mt_tz = ZoneInfo("America/Denver")
 
 def format_to_mountain_time(gameday_str, raw_time_str):
-    """
-    Converts either ISO-8601 UTC strings ('...Z') or NBA API Eastern Time strings
-    (e.g., '7:30 pm ET') into Colorado Mountain Time ('Nov 04 • 5:30 PM MT').
-    """
     clean_date = str(gameday_str).split('T')[0].split(' ')[0]
     if not raw_time_str or raw_time_str == 'TBD':
         try:
@@ -56,27 +52,27 @@ def format_to_mountain_time(gameday_str, raw_time_str):
 
     raw_str = str(raw_time_str).strip()
 
-    # Case 1: ISO-8601 UTC string (e.g., '2026-11-04T23:30:00Z')
-    if raw_str.endswith('Z'):
+    iso_match = re.match(r'(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?', raw_str)
+    if iso_match:
+        yr, mo, dy, hr, mi, sc = iso_match.groups()
+        sc = sc if sc else '00'
         try:
-            dt_utc = datetime.strptime(raw_str, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
+            dt_utc = datetime(int(yr), int(mo), int(dy), int(hr), int(mi), int(sc), tzinfo=timezone.utc)
             dt_mt = dt_utc.astimezone(mt_tz)
-            return f"{dt_mt.strftime('%b %d')} • {dt_mt.strftime('%I:%M %p').lstrip('0')} MT"
-        except ValueError:
+            return f"{dt_mt.strftime('%b %d')} • {dt_mt.strftime('%I:%M %p').lstrip('0')}"
+        except Exception:
             pass
 
-    # Case 2: NBA API Eastern Time string (e.g., '7:30 pm ET' or '10:00 pm ET')
     et_match = re.search(r'(\d{1,2}:\d{2})\s*(am|pm)', raw_str, re.IGNORECASE)
     if et_match:
         time_part = f"{et_match.group(1)} {et_match.group(2).upper()}"
         try:
             dt_et = datetime.strptime(f"{clean_date} {time_part}", "%Y-%m-%d %I:%M %p").replace(tzinfo=et_tz)
             dt_mt = dt_et.astimezone(mt_tz)
-            return f"{dt_mt.strftime('%b %d')} • {dt_mt.strftime('%I:%M %p').lstrip('0')} MT"
+            return f"{dt_mt.strftime('%b %d')} • {dt_mt.strftime('%I:%M %p').lstrip('0')}"
         except ValueError:
             pass
 
-    # Fallback if game is already Final or in progress (e.g., 'Final', 'Q3 4:20')
     try:
         dt_date = datetime.strptime(clean_date, '%Y-%m-%d')
         return f"{dt_date.strftime('%b %d')} • {raw_str}"
@@ -145,7 +141,6 @@ table.auto_set_font_size(False)
 table.set_fontsize(10)
 table.scale(1, 1.3)
 
-# Slightly wider first column (0.24) so 'MODERATE CONFIDENCE' never clips
 col_widths = [0.24, 0.20, 0.10, 0.10, 0.09, 0.11, 0.16]
 for i, col in enumerate(col_widths):
     for row in range(len(table_data) + 1):
