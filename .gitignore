@@ -1,0 +1,15 @@
+# Virtual environments
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment variables & OS files
+.env
+.DS_Store
+
+# Optional: uncomment below if you do NOT want to push CSVs or .joblib models
+# data/*.csv
+# models/*.joblib
