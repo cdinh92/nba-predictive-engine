@@ -1,0 +1,225 @@
+{
+  "last_updated": "2026-11-16T08:33:54SZ",
+  "season": "2026-27",
+  "target_date": "2026-11-16",
+  "games_by_date": {
+    "2026-11-16": [
+      {
+        "game_id": "0022600245",
+        "gametime": "2026-11-17T00:00:00SZ",
+        "home_team": {
+          "abbr": "BOS",
+          "name": "Celtics",
+          "moneyline": -360
+        },
+        "away_team": {
+          "abbr": "ORL",
+          "name": "Magic",
+          "moneyline": 290
+        },
+        "prediction": {
+          "model_home_win_prob": 0.839,
+          "vegas_home_implied_prob": 0.753,
+          "edge": 0.086,
+          "pick_abbr": "BOS",
+          "pick_name": "Celtics",
+          "projected_margin": 13.0,
+          "projected_total_points": 222.3,
+          "confidence_tier": "High"
+        }
+      },
+      {
+        "game_id": "0022600245",
+        "gametime": "2026-11-17T00:00:00SZ",
+        "home_team": {
+          "abbr": "BOS",
+          "name": "Celtics",
+          "moneyline": -360
+        },
+        "away_team": {
+          "abbr": "ORL",
+          "name": "Magic",
+          "moneyline": 290
+        },
+        "prediction": {
+          "model_home_win_prob": 0.839,
+          "vegas_home_implied_prob": 0.753,
+          "edge": 0.086,
+          "pick_abbr": "BOS",
+          "pick_name": "Celtics",
+          "projected_margin": 13.0,
+          "projected_total_points": 222.3,
+          "confidence_tier": "High"
+        }
+      },
+      {
+        "game_id": "0022600246",
+        "gametime": "2026-11-17T00:00:00SZ",
+        "home_team": {
+          "abbr": "CLE",
+          "name": "Cavaliers",
+          "moneyline": -395
+        },
+        "away_team": {
+          "abbr": "CHI",
+          "name": "Bulls",
+          "moneyline": 312
+        },
+        "prediction": {
+          "model_home_win_prob": 0.799,
+          "vegas_home_implied_prob": 0.767,
+          "edge": 0.032,
+          "pick_abbr": "CLE",
+          "pick_name": "Cavaliers",
+          "projected_margin": 10.4,
+          "projected_total_points": 236.5,
+          "confidence_tier": "High"
+        }
+      },
+      {
+        "game_id": "0022600247",
+        "gametime": "2026-11-17T00:00:00SZ",
+        "home_team": {
+          "abbr": "WAS",
+          "name": "Wizards",
+          "moneyline": 136
+        },
+        "away_team": {
+          "abbr": "MEM",
+          "name": "Grizzlies",
+          "moneyline": -162
+        },
+        "prediction": {
+          "model_home_win_prob": 0.428,
+          "vegas_home_implied_prob": 0.407,
+          "edge": 0.022,
+          "pick_abbr": "MEM",
+          "pick_name": "Grizzlies",
+          "projected_margin": 2.0,
+          "projected_total_points": 228.8,
+          "confidence_tier": "Low"
+        }
+      },
+      {
+        "game_id": "0022600248",
+        "gametime": "2026-11-17T00:30:00SZ",
+        "home_team": {
+          "abbr": "BKN",
+          "name": "Nets",
+          "moneyline": 198
+        },
+        "away_team": {
+          "abbr": "PHI",
+          "name": "76ers",
+          "moneyline": -245
+        },
+        "prediction": {
+          "model_home_win_prob": 0.376,
+          "vegas_home_implied_prob": 0.321,
+          "edge": 0.055,
+          "pick_abbr": "PHI",
+          "pick_name": "76ers",
+          "projected_margin": 3.4,
+          "projected_total_points": 221.2,
+          "confidence_tier": "Moderate"
+        }
+      },
+      {
+        "game_id": "0022600249",
+        "gametime": "2026-11-17T00:30:00SZ",
+        "home_team": {
+          "abbr": "MIA",
+          "name": "Heat",
+          "moneyline": 110
+        },
+        "away_team": {
+          "abbr": "HOU",
+          "name": "Rockets",
+          "moneyline": -130
+        },
+        "prediction": {
+          "model_home_win_prob": 0.467,
+          "vegas_home_implied_prob": 0.457,
+          "edge": 0.01,
+          "pick_abbr": "HOU",
+          "pick_name": "Rockets",
+          "projected_margin": 0.9,
+          "projected_total_points": 232.2,
+          "confidence_tier": "Low"
+        }
+      },
+      {
+        "game_id": "0022600250",
+        "gametime": "2026-11-17T01:00:00SZ",
+        "home_team": {
+          "abbr": "MIN",
+          "name": "Timberwolves",
+          "moneyline": -136
+        },
+        "away_team": {
+          "abbr": "POR",
+          "name": "Trail Blazers",
+          "moneyline": 116
+        },
+        "prediction": {
+          "model_home_win_prob": 0.614,
+          "vegas_home_implied_prob": 0.555,
+          "edge": 0.06,
+          "pick_abbr": "MIN",
+          "pick_name": "Timberwolves",
+          "projected_margin": 4.0,
+          "projected_total_points": 227.1,
+          "confidence_tier": "Moderate"
+        }
+      },
+      {
+        "game_id": "0022600251",
+        "gametime": "2026-11-17T01:00:00SZ",
+        "home_team": {
+          "abbr": "NOP",
+          "name": "Pelicans",
+          "moneyline": 134
+        },
+        "away_team": {
+          "abbr": "GSW",
+          "name": "Warriors",
+          "moneyline": -158
+        },
+        "prediction": {
+          "model_home_win_prob": 0.461,
+          "vegas_home_implied_prob": 0.411,
+          "edge": 0.05,
+          "pick_abbr": "GSW",
+          "pick_name": "Warriors",
+          "projected_margin": 0.8,
+          "projected_total_points": 232.8,
+          "confidence_tier": "Low"
+        }
+      },
+      {
+        "game_id": "0022600252",
+        "gametime": "2026-11-17T02:00:00SZ",
+        "home_team": {
+          "abbr": "DEN",
+          "name": "Nuggets",
+          "moneyline": -438
+        },
+        "away_team": {
+          "abbr": "PHX",
+          "name": "Suns",
+          "moneyline": 341
+        },
+        "prediction": {
+          "model_home_win_prob": 0.741,
+          "vegas_home_implied_prob": 0.782,
+          "edge": -0.041,
+          "pick_abbr": "DEN",
+          "pick_name": "Nuggets",
+          "projected_margin": 7.4,
+          "projected_total_points": 228.2,
+          "confidence_tier": "High"
+        }
+      }
+    ]
+  }
+}
