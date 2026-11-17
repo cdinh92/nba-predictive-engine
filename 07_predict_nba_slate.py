@@ -138,10 +138,19 @@ def get_team_latest_stats(df, team, target_date_str):
     is_home = last_game['home_team'] == team
     prefix = 'home_' if is_home else 'away_'
 
-    last_date = pd.to_datetime(last_game['gameday'])
+    # Get recent game dates to check for 3-in-4 nights fatigue
+    last_game_date = pd.to_datetime(last_game['gameday'])
     target_dt = pd.to_datetime(target_date_str)
-    rest_days = max(1, min(5, (target_dt - last_date).days))
+    rest_days = max(1, min(5, (target_dt - last_game_date).days))
     is_b2b = 1 if rest_days == 1 else 0
+
+    # Determine if playing 3rd game in 4 nights
+    is_3_in_4 = 0
+    if len(team_games) >= 2:
+        prev2_game = team_games.iloc[-2]
+        prev2_date = pd.to_datetime(prev2_game['gameday'])
+        days_since_prev2 = (target_dt - prev2_date).days
+        is_3_in_4 = 1 if days_since_prev2 <= 3 else 0
 
     return {
         'roll_pts_scored': last_game.get(f'{prefix}roll_pts_scored', 112.0),
@@ -156,7 +165,8 @@ def get_team_latest_stats(df, team, target_date_str):
         'roll_oreb_pct': last_game.get(f'{prefix}roll_oreb_pct', 0.25),
         'roll_adj_off_rtg': last_game.get(f'{prefix}adj_off_rtg', 0.0),
         'rest_days': rest_days,
-        'is_b2b': is_b2b
+        'is_b2b': is_b2b,
+        'is_3_in_4': is_3_in_4
     }
 
 def fetch_daily_slate(target_date):
@@ -164,6 +174,9 @@ def fetch_daily_slate(target_date):
     header_df = sb.game_header.get_data_frame()
     if header_df.empty:
         return pd.DataFrame()
+        
+    # Drop duplicate game IDs before processing
+    header_df = header_df.drop_duplicates(subset=['GAME_ID'])
 
     games = []
     for _, row in header_df.iterrows():
@@ -185,7 +198,7 @@ if __name__ == '__main__':
     MODEL_DIR = os.path.join(PROJECT_ROOT, 'models')
 
     TARGET_SEASON = '2026-27'
-    TARGET_DATE = '2026-11-16'
+    TARGET_DATE = '2026-11-17'
 
     PREDICTIONS_BASE = os.path.join(PROJECT_ROOT, 'predictions')
     DATE_FOLDER_NAME = f'date_{TARGET_DATE}'
@@ -291,7 +304,9 @@ if __name__ == '__main__':
             'diff_adj_off_rtg': home_stats['roll_adj_off_rtg'] - away_stats['roll_adj_off_rtg'],
             'rest_diff': rest_diff,
             'home_is_b2b': home_stats['is_b2b'],
-            'away_is_b2b': away_stats['is_b2b']
+            'away_is_b2b': away_stats['is_b2b'],
+            'home_is_3_in_4': home_stats['is_3_in_4'],
+            'away_is_3_in_4': away_stats['is_3_in_4']
         }])
 
         predicted_margin = float(margin_model.predict(margin_matchup_data)[0])

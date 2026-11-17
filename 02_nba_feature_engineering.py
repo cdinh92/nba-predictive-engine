@@ -19,7 +19,7 @@ def calculate_opponent_adjusted_rtg(df):
     return team_off_factor[['team', 'adj_off_rtg']]
 
 def calculate_rolling_and_rest_features(df):
-    print("Calculating time-shifted EMA rolling averages (Span=10) & Rest Days / B2B flags...")
+    print("Calculating time-shifted EMA rolling averages (Span=10) & Rest Days / Schedule Density...")
 
     home_cols = [
         'game_id', 'season', 'gameday', 'home_team',
@@ -28,17 +28,10 @@ def calculate_rolling_and_rest_features(df):
         'home_efg_pct', 'home_ts_pct', 'home_tov_pct', 'home_oreb_pct', 'home_ftr'
     ]
     home_df = df[home_cols].copy().rename(columns={
-        'home_team': 'team',
-        'home_score': 'pts_scored',
-        'away_score': 'pts_allowed',
-        'home_off_rtg': 'off_rtg',
-        'home_def_rtg': 'def_rtg',
-        'home_net_rtg': 'net_rtg',
-        'home_efg_pct': 'efg_pct',
-        'home_ts_pct': 'ts_pct',
-        'home_tov_pct': 'tov_pct',
-        'home_oreb_pct': 'oreb_pct',
-        'home_ftr': 'ftr'
+        'home_team': 'team', 'home_score': 'pts_scored', 'away_score': 'pts_allowed',
+        'home_off_rtg': 'off_rtg', 'home_def_rtg': 'def_rtg', 'home_net_rtg': 'net_rtg',
+        'home_efg_pct': 'efg_pct', 'home_ts_pct': 'ts_pct', 'home_tov_pct': 'tov_pct',
+        'home_oreb_pct': 'oreb_pct', 'home_ftr': 'ftr'
     })
     home_df['is_home'] = 1
 
@@ -49,27 +42,26 @@ def calculate_rolling_and_rest_features(df):
         'away_efg_pct', 'away_ts_pct', 'away_tov_pct', 'away_oreb_pct', 'away_ftr'
     ]
     away_df = df[away_cols].copy().rename(columns={
-        'away_team': 'team',
-        'away_score': 'pts_scored',
-        'home_score': 'pts_allowed',
-        'away_off_rtg': 'off_rtg',
-        'away_def_rtg': 'def_rtg',
-        'away_net_rtg': 'net_rtg',
-        'away_efg_pct': 'efg_pct',
-        'away_ts_pct': 'ts_pct',
-        'away_tov_pct': 'tov_pct',
-        'away_oreb_pct': 'oreb_pct',
-        'away_ftr': 'ftr'
+        'away_team': 'team', 'away_score': 'pts_scored', 'home_score': 'pts_allowed',
+        'away_off_rtg': 'off_rtg', 'away_def_rtg': 'def_rtg', 'away_net_rtg': 'net_rtg',
+        'away_efg_pct': 'efg_pct', 'away_ts_pct': 'ts_pct', 'away_tov_pct': 'tov_pct',
+        'away_oreb_pct': 'oreb_pct', 'away_ftr': 'ftr'
     })
     away_df['is_home'] = 0
 
     team_df = pd.concat([home_df, away_df]).sort_values(by=['team', 'gameday', 'game_id']).reset_index(drop=True)
     team_df['gameday_dt'] = pd.to_datetime(team_df['gameday'])
 
-    # Calculate Rest Days & Back-to-Back (B2B) status
+    # Calculate Rest Days & Schedule Density (B2B and 3-in-4 nights)
     team_df['prev_gameday'] = team_df.groupby(['team', 'season'])['gameday_dt'].shift(1)
+    team_df['prev2_gameday'] = team_df.groupby(['team', 'season'])['gameday_dt'].shift(2)
+    
     team_df['rest_days'] = (team_df['gameday_dt'] - team_df['prev_gameday']).dt.days.fillna(4).clip(upper=5)
     team_df['is_b2b'] = (team_df['rest_days'] == 1).astype(int)
+    
+    # 3 games in 4 nights flag
+    team_df['days_since_prev2'] = (team_df['gameday_dt'] - team_df['prev2_gameday']).dt.days
+    team_df['is_3_in_4'] = (team_df['days_since_prev2'] <= 3).astype(int)
 
     metrics_to_roll = [
         'pts_scored', 'pts_allowed', 'pace',
@@ -77,7 +69,6 @@ def calculate_rolling_and_rest_features(df):
         'efg_pct', 'ts_pct', 'tov_pct', 'oreb_pct', 'ftr'
     ]
 
-    # NBA plays 82 games vs NFL's 17 -> Span=10 captures ~2-3 weeks of recent form
     SPAN_VAL = 10
     for metric in metrics_to_roll:
         team_df[f'roll_{metric}'] = (
@@ -85,7 +76,7 @@ def calculate_rolling_and_rest_features(df):
             .transform(lambda x: x.shift(1).ewm(span=SPAN_VAL, adjust=False).mean())
         ).fillna(0)
 
-    stat_cols = [f'roll_{m}' for m in metrics_to_roll] + ['rest_days', 'is_b2b']
+    stat_cols = [f'roll_{m}' for m in metrics_to_roll] + ['rest_days', 'is_b2b', 'is_3_in_4']
 
     home_stats = team_df[team_df['is_home'] == 1][['game_id'] + stat_cols].rename(
         columns={c: f'home_{c}' for c in stat_cols}
@@ -105,7 +96,7 @@ def calculate_rolling_and_rest_features(df):
         on='away_team', how='left'
     )
 
-    # --- CONDENSE TO DIFFERENTIALS (10 Core Features for Margin Model) ---
+    # Core Differentials
     fully_merged['diff_pts_scored'] = fully_merged['home_roll_pts_scored'] - fully_merged['away_roll_pts_scored']
     fully_merged['diff_pts_allowed'] = fully_merged['away_roll_pts_allowed'] - fully_merged['home_roll_pts_allowed']
     fully_merged['diff_off_rtg'] = fully_merged['home_roll_off_rtg'] - fully_merged['away_roll_off_rtg']
@@ -118,7 +109,7 @@ def calculate_rolling_and_rest_features(df):
     fully_merged['diff_adj_off_rtg'] = fully_merged['home_adj_off_rtg'] - fully_merged['away_adj_off_rtg']
     fully_merged['rest_diff'] = fully_merged['home_rest_days'] - fully_merged['away_rest_days']
 
-    # --- VOLUME SUM FEATURES FOR TOTAL POINTS MODEL ---
+    # Volume Sum Features
     fully_merged['sum_pts_scored'] = fully_merged['home_roll_pts_scored'] + fully_merged['away_roll_pts_scored']
     fully_merged['sum_pts_allowed'] = fully_merged['home_roll_pts_allowed'] + fully_merged['away_roll_pts_allowed']
     fully_merged['sum_pace'] = fully_merged['home_roll_pace'] + fully_merged['away_roll_pace']
