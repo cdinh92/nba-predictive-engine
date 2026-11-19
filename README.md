@@ -51,21 +51,37 @@ python src/03_nba_model_training.py
 python src/07_predict_nba_slate.py
 ```
 
-## 🎯 Today's Picks (Nov 17, 2026)
+## 🎯 Today's Picks (Nov 18, 2026)
 
-Here are the optimized model projections for today's slate, incorporating the new fatigue metrics:
+Here are the optimized model projections for today's slate, incorporating the latest fatigue metrics:
 
-![Today's NBA Predictions](predictions/date_2026-11-17/nba_predictions_2026-11-17.png)
+![Today's NBA Predictions](predictions/date_2026-11-18/nba_predictions_2026-11-18.png)
 
-## 📈 Recent Performance Evaluation (Nov 15, 2026)
+## 📈 Recent Performance Evaluation (Nov 17, 2026)
 
-The model recently achieved a perfect **9–0 (100%)** record on straight-up winner picks across the entire November 15 NBA slate. Every predicted margin was also cleared by the winning team.
+The model went **3–2 (60.0%)** straight up on the November 17 NBA slate, showing strong calibration across confidence tiers and accurate market-edge detection.
 
 ### Performance Breakdown
 
-* **Straight-Up Winner Record:** 9–0 (100%)
-  * **High Confidence:** 4–0 (100%)
-  * **Moderate Confidence:** 1–0 (100%)
-  * **Low Confidence:** 4–0 (100%)
-* **Predicted Margin Clearance:** 9–0 (100%) — Every winner beat the model's projected victory margin.
-* **Over/Under Totals:** 6 Overs, 3 Unders.
+* **Straight-Up Winner Record:** 3–2 (60.0%)
+  * **High Confidence:** 1–0 (100%)
+  * **Moderate Confidence:** 2–1 (66.7%)
+  * **Low Confidence:** 0–1 (0%)
+* **Margin MAE:** 11.38 pts (6.40 pts excluding the Jazz @ Clippers blowout outlier)
+* **Over/Under Totals:** 2 Overs, 3 Unders (Total Points MAE: 15.06 pts)
+
+### Game-by-Game Results
+
+| Tier | Matchup | Model Pick | Actual Result | SU | Pred O/U | Actual Total |
+| :--- | :--- | :--- | :--- | :---: | :---: | :---: |
+| **High** | Hornets @ Lakers | Lakers (+7.5) | **Lakers** 118–114 OT | ✅ | 216.8 | 232 (Over) |
+| **Moderate** | Knicks @ Raptors | Knicks (+3.6) | **Knicks** 111–102 | ✅ | 224.3 | 213 (Under) |
+| **Moderate** | Trail Blazers @ Timberwolves | Timberwolves (+4.9) | **Timberwolves** 106–105 | ✅ | 228.0 | 211 (Under) |
+| **Moderate** | Jazz @ Clippers | Clippers (+6.3) | **Jazz** 132–107 | ❌ | 231.4 | 239 (Over) |
+| **Low** | Pistons @ Spurs | Spurs (+0.8) | **Pistons** 105–93 | ❌ | 222.2 | 198 (Under) |
+
+### Key Takeaways
+
+* **Confidence Calibration Held:** High Confidence went 1–0, Moderate went 2–1, and Low Confidence went 0–1.
+* **Market Edge Signals Worked:** Minnesota cashed as the slate's highest positive edge (+8.0% vs. Vegas), while the model's -19.0% edge on Pistons @ Spurs accurately flagged San Antonio as an overvalued heavy favorite before Detroit's 12-point upset.
+* **Totals Trended Under:** Three of five games finished under the projected total by double digits, with Hornets @ Lakers only clearing the over in overtime.

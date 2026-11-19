@@ -198,7 +198,7 @@ if __name__ == '__main__':
     MODEL_DIR = os.path.join(PROJECT_ROOT, 'models')
 
     TARGET_SEASON = '2026-27'
-    TARGET_DATE = '2026-11-17'
+    TARGET_DATE = '2026-11-18'
 
     PREDICTIONS_BASE = os.path.join(PROJECT_ROOT, 'predictions')
     DATE_FOLDER_NAME = f'date_{TARGET_DATE}'
